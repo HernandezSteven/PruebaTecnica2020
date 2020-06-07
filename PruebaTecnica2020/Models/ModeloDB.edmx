@@ -36,7 +36,6 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
             <PropertyRef Name="idCliente" />
             <PropertyRef Name="FechaEvento" />
             <PropertyRef Name="CantidadPersonas" />
-            <PropertyRef Name="Motivo" />
             <PropertyRef Name="Observaciones" />
             <PropertyRef Name="Estado" />
           </Key>
@@ -44,9 +43,9 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           <Property Name="idCliente" Type="int" Nullable="false" />
           <Property Name="FechaEvento" Type="datetime" Nullable="false" />
           <Property Name="CantidadPersonas" Type="int" Nullable="false" />
-          <Property Name="Motivo" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="Observaciones" Type="varchar" MaxLength="1000" Nullable="false" />
           <Property Name="Estado" Type="bit" Nullable="false" />
+          <Property Name="idMotivo" Type="int" />
         </EntityType>
         <EntityType Name="Departamento">
           <Key>
@@ -54,6 +53,13 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           </Key>
           <Property Name="idDepartamento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="nombreDepartamento" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Motivo">
+          <Key>
+            <PropertyRef Name="idMotivo" />
+          </Key>
+          <Property Name="idMotivo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombreMotivo" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="Salon">
           <Key>
@@ -71,6 +77,22 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.vw_InformeSolicitudes' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="vw_InformeSolicitudes">
+          <Key>
+            <PropertyRef Name="Nombre" />
+            <PropertyRef Name="identificacionCliente" />
+            <PropertyRef Name="telefonoCliente" />
+          </Key>
+          <Property Name="Nombre" Type="varchar" MaxLength="243" Nullable="false" />
+          <Property Name="identificacionCliente" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="telefonoCliente" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="nombreCiudad" Type="varchar" MaxLength="100" />
+          <Property Name="FechaEvento" Type="datetime" />
+          <Property Name="CantidadPersonas" Type="int" />
+          <Property Name="nombreMotivo" Type="varchar" MaxLength="100" />
         </EntityType>
         <Association Name="FK__Ciudad__nombreCi__5070F446">
           <End Role="Departamento" Type="Self.Departamento" Multiplicity="1" />
@@ -105,6 +127,18 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
             </Principal>
             <Dependent Role="ClienteSalon">
               <PropertyRef Name="idCliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClienteSa__idMot__5EBF139D">
+          <End Role="Motivo" Type="Self.Motivo" Multiplicity="0..1" />
+          <End Role="ClienteSalon" Type="Self.ClienteSalon" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Motivo">
+              <PropertyRef Name="idMotivo" />
+            </Principal>
+            <Dependent Role="ClienteSalon">
+              <PropertyRef Name="idMotivo" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -166,6 +200,7 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           <EntitySet Name="Ciudad" EntityType="Self.Ciudad" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Departamento" EntityType="Self.Departamento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Motivo" EntityType="Self.Motivo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Salon" EntityType="Self.Salon" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClienteSalon" EntityType="Self.ClienteSalon" store:Type="Tables" store:Schema="dbo">
@@ -174,10 +209,21 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
     [ClienteSalon].[idCliente] AS [idCliente], 
     [ClienteSalon].[FechaEvento] AS [FechaEvento], 
     [ClienteSalon].[CantidadPersonas] AS [CantidadPersonas], 
-    [ClienteSalon].[Motivo] AS [Motivo], 
     [ClienteSalon].[Observaciones] AS [Observaciones], 
-    [ClienteSalon].[Estado] AS [Estado]
+    [ClienteSalon].[Estado] AS [Estado], 
+    [ClienteSalon].[idMotivo] AS [idMotivo]
     FROM [dbo].[ClienteSalon] AS [ClienteSalon]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vw_InformeSolicitudes" EntityType="Self.vw_InformeSolicitudes" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_InformeSolicitudes].[Nombre] AS [Nombre], 
+    [vw_InformeSolicitudes].[identificacionCliente] AS [identificacionCliente], 
+    [vw_InformeSolicitudes].[telefonoCliente] AS [telefonoCliente], 
+    [vw_InformeSolicitudes].[nombreCiudad] AS [nombreCiudad], 
+    [vw_InformeSolicitudes].[FechaEvento] AS [FechaEvento], 
+    [vw_InformeSolicitudes].[CantidadPersonas] AS [CantidadPersonas], 
+    [vw_InformeSolicitudes].[nombreMotivo] AS [nombreMotivo]
+    FROM [dbo].[vw_InformeSolicitudes] AS [vw_InformeSolicitudes]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK__Ciudad__nombreCi__5070F446" Association="Self.FK__Ciudad__nombreCi__5070F446">
             <End Role="Departamento" EntitySet="Departamento" />
@@ -189,6 +235,10 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           </AssociationSet>
           <AssociationSet Name="FK__ClienteSa__idCli__571DF1D5" Association="Self.FK__ClienteSa__idCli__571DF1D5">
             <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="ClienteSalon" EntitySet="ClienteSalon" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ClienteSa__idMot__5EBF139D" Association="Self.FK__ClienteSa__idMot__5EBF139D">
+            <End Role="Motivo" EntitySet="Motivo" />
             <End Role="ClienteSalon" EntitySet="ClienteSalon" />
           </AssociationSet>
           <AssociationSet Name="FK__ClienteSa__idSal__5812160E" Association="Self.FK__ClienteSa__idSal__5812160E">
@@ -225,7 +275,7 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           <Property Name="idCiudad" Type="Int32" Nullable="false" />
           <Property Name="edadCliente" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Ciudad" Relationship="Self.FK__Cliente__idCiuda__534D60F1" FromRole="Cliente" ToRole="Ciudad" />
-          <NavigationProperty Name="ClienteSalon" Relationship="Self.FK__ClienteSa__idCli__571DF1D5" FromRole="Cliente" ToRole="ClienteSalon" />
+          <NavigationProperty Name="ClienteSalon" Relationship="SalonesEmpresarialesXYZModel.FK__ClienteSa__idCli__571DF1D5" FromRole="Cliente" ToRole="ClienteSalon" />
         </EntityType>
         <EntityType Name="Departamento">
           <Key>
@@ -241,7 +291,7 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           </Key>
           <Property Name="idSalon" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="nombreSalon" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="ClienteSalon" Relationship="Self.FK__ClienteSa__idSal__5812160E" FromRole="Salon" ToRole="ClienteSalon" />
+          <NavigationProperty Name="ClienteSalon" Relationship="SalonesEmpresarialesXYZModel.FK__ClienteSa__idSal__5812160E" FromRole="Salon" ToRole="ClienteSalon" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -252,26 +302,6 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="ClienteSalon">
-          <Key>
-            <PropertyRef Name="idSalon" />
-            <PropertyRef Name="idCliente" />
-            <PropertyRef Name="FechaEvento" />
-            <PropertyRef Name="CantidadPersonas" />
-            <PropertyRef Name="Motivo" />
-            <PropertyRef Name="Observaciones" />
-            <PropertyRef Name="Estado" />
-          </Key>
-          <Property Name="idSalon" Type="Int32" Nullable="false" />
-          <Property Name="idCliente" Type="Int32" Nullable="false" />
-          <Property Name="FechaEvento" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CantidadPersonas" Type="Int32" Nullable="false" />
-          <Property Name="Motivo" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Observaciones" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Estado" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Cliente" Relationship="Self.FK__ClienteSa__idCli__571DF1D5" FromRole="ClienteSalon" ToRole="Cliente" />
-          <NavigationProperty Name="Salon" Relationship="Self.FK__ClienteSa__idSal__5812160E" FromRole="ClienteSalon" ToRole="Salon" />
         </EntityType>
         <Association Name="FK__Ciudad__nombreCi__5070F446">
           <End Role="Departamento" Type="Self.Departamento" Multiplicity="1" />
@@ -297,37 +327,12 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClienteSa__idCli__571DF1D5">
-          <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
-          <End Role="ClienteSalon" Type="Self.ClienteSalon" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Cliente">
-              <PropertyRef Name="idCliente" />
-            </Principal>
-            <Dependent Role="ClienteSalon">
-              <PropertyRef Name="idCliente" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__ClienteSa__idSal__5812160E">
-          <End Role="Salon" Type="Self.Salon" Multiplicity="1" />
-          <End Role="ClienteSalon" Type="Self.ClienteSalon" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Salon">
-              <PropertyRef Name="idSalon" />
-            </Principal>
-            <Dependent Role="ClienteSalon">
-              <PropertyRef Name="idSalon" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="SalonesEmpresarialesXYZEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Ciudad" EntityType="Self.Ciudad" />
           <EntitySet Name="Cliente" EntityType="Self.Cliente" />
           <EntitySet Name="Departamento" EntityType="Self.Departamento" />
           <EntitySet Name="Salon" EntityType="Self.Salon" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
-          <EntitySet Name="ClienteSalon" EntityType="Self.ClienteSalon" />
           <AssociationSet Name="FK__Ciudad__nombreCi__5070F446" Association="Self.FK__Ciudad__nombreCi__5070F446">
             <End Role="Departamento" EntitySet="Departamento" />
             <End Role="Ciudad" EntitySet="Ciudad" />
@@ -335,14 +340,6 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           <AssociationSet Name="FK__Cliente__idCiuda__534D60F1" Association="Self.FK__Cliente__idCiuda__534D60F1">
             <End Role="Ciudad" EntitySet="Ciudad" />
             <End Role="Cliente" EntitySet="Cliente" />
-          </AssociationSet>
-          <AssociationSet Name="FK__ClienteSa__idCli__571DF1D5" Association="Self.FK__ClienteSa__idCli__571DF1D5">
-            <End Role="Cliente" EntitySet="Cliente" />
-            <End Role="ClienteSalon" EntitySet="ClienteSalon" />
-          </AssociationSet>
-          <AssociationSet Name="FK__ClienteSa__idSal__5812160E" Association="Self.FK__ClienteSa__idSal__5812160E">
-            <End Role="Salon" EntitySet="Salon" />
-            <End Role="ClienteSalon" EntitySet="ClienteSalon" />
           </AssociationSet>
           <FunctionImport Name="sp_alterdiagram">
             <Parameter Name="diagramname" Mode="In" Type="String" />
@@ -385,6 +382,21 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
             <Parameter Name="idCiudad" Mode="In" Type="Int32" />
             <Parameter Name="edadCliente" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Motivo" EntityType="SalonesEmpresarialesXYZModel.Motivo" />
+          <EntitySet Name="ClienteSalon" EntityType="SalonesEmpresarialesXYZModel.ClienteSalon" />
+          <AssociationSet Name="FK__ClienteSa__idCli__571DF1D5" Association="SalonesEmpresarialesXYZModel.FK__ClienteSa__idCli__571DF1D5">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="ClienteSalon" EntitySet="ClienteSalon" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ClienteSa__idMot__5EBF139D" Association="SalonesEmpresarialesXYZModel.FK__ClienteSa__idMot__5EBF139D">
+            <End Role="Motivo" EntitySet="Motivo" />
+            <End Role="ClienteSalon" EntitySet="ClienteSalon" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ClienteSa__idSal__5812160E" Association="SalonesEmpresarialesXYZModel.FK__ClienteSa__idSal__5812160E">
+            <End Role="Salon" EntitySet="Salon" />
+            <End Role="ClienteSalon" EntitySet="ClienteSalon" />
+          </AssociationSet>
+          <EntitySet Name="vw_InformeSolicitudes" EntityType="SalonesEmpresarialesXYZModel.vw_InformeSolicitudes" />
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -397,6 +409,84 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
         </ComplexType>
+        <EntityType Name="Motivo">
+          <Key>
+            <PropertyRef Name="idMotivo" />
+          </Key>
+          <Property Name="idMotivo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombreMotivo" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ClienteSalon" Relationship="SalonesEmpresarialesXYZModel.FK__ClienteSa__idMot__5EBF139D" FromRole="Motivo" ToRole="ClienteSalon" />
+        </EntityType>
+        <EntityType Name="ClienteSalon">
+          <Key>
+            <PropertyRef Name="idSalon" />
+            <PropertyRef Name="idCliente" />
+            <PropertyRef Name="FechaEvento" />
+            <PropertyRef Name="CantidadPersonas" />
+            <PropertyRef Name="Observaciones" />
+            <PropertyRef Name="Estado" />
+          </Key>
+          <Property Name="idSalon" Type="Int32" Nullable="false" />
+          <Property Name="idCliente" Type="Int32" Nullable="false" />
+          <Property Name="FechaEvento" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CantidadPersonas" Type="Int32" Nullable="false" />
+          <Property Name="Observaciones" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="Boolean" Nullable="false" />
+          <Property Name="idMotivo" Type="Int32" />
+          <NavigationProperty Name="Cliente" Relationship="SalonesEmpresarialesXYZModel.FK__ClienteSa__idCli__571DF1D5" FromRole="ClienteSalon" ToRole="Cliente" />
+          <NavigationProperty Name="Motivo" Relationship="SalonesEmpresarialesXYZModel.FK__ClienteSa__idMot__5EBF139D" FromRole="ClienteSalon" ToRole="Motivo" />
+          <NavigationProperty Name="Salon" Relationship="SalonesEmpresarialesXYZModel.FK__ClienteSa__idSal__5812160E" FromRole="ClienteSalon" ToRole="Salon" />
+        </EntityType>
+        <Association Name="FK__ClienteSa__idCli__571DF1D5">
+          <End Type="SalonesEmpresarialesXYZModel.Cliente" Role="Cliente" Multiplicity="1" />
+          <End Type="SalonesEmpresarialesXYZModel.ClienteSalon" Role="ClienteSalon" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="idCliente" />
+            </Principal>
+            <Dependent Role="ClienteSalon">
+              <PropertyRef Name="idCliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClienteSa__idMot__5EBF139D">
+          <End Type="SalonesEmpresarialesXYZModel.Motivo" Role="Motivo" Multiplicity="0..1" />
+          <End Type="SalonesEmpresarialesXYZModel.ClienteSalon" Role="ClienteSalon" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Motivo">
+              <PropertyRef Name="idMotivo" />
+            </Principal>
+            <Dependent Role="ClienteSalon">
+              <PropertyRef Name="idMotivo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClienteSa__idSal__5812160E">
+          <End Type="SalonesEmpresarialesXYZModel.Salon" Role="Salon" Multiplicity="1" />
+          <End Type="SalonesEmpresarialesXYZModel.ClienteSalon" Role="ClienteSalon" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Salon">
+              <PropertyRef Name="idSalon" />
+            </Principal>
+            <Dependent Role="ClienteSalon">
+              <PropertyRef Name="idSalon" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="vw_InformeSolicitudes">
+          <Key>
+            <PropertyRef Name="Nombre" />
+            <PropertyRef Name="identificacionCliente" />
+            <PropertyRef Name="telefonoCliente" />
+          </Key>
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="243" FixedLength="false" Unicode="false" />
+          <Property Name="identificacionCliente" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="telefonoCliente" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="nombreCiudad" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaEvento" Type="DateTime" Precision="3" />
+          <Property Name="CantidadPersonas" Type="Int32" />
+          <Property Name="nombreMotivo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -455,19 +545,6 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ClienteSalon">
-            <EntityTypeMapping TypeName="SalonesEmpresarialesXYZModel.ClienteSalon">
-              <MappingFragment StoreEntitySet="ClienteSalon">
-                <ScalarProperty Name="idSalon" ColumnName="idSalon" />
-                <ScalarProperty Name="idCliente" ColumnName="idCliente" />
-                <ScalarProperty Name="FechaEvento" ColumnName="FechaEvento" />
-                <ScalarProperty Name="CantidadPersonas" ColumnName="CantidadPersonas" />
-                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
-                <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="SalonesEmpresarialesXYZModel.Store.sp_alterdiagram" />
           <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="SalonesEmpresarialesXYZModel.Store.sp_creatediagram" />
           <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="SalonesEmpresarialesXYZModel.Store.sp_dropdiagram" />
@@ -493,6 +570,40 @@ advertencia 6002: La tabla o vista 'SalonesEmpresarialesXYZ.dbo.ClienteSalon' no
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="SalonesEmpresarialesXYZModel.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="SalonesEmpresarialesXYZModel.Store.sp_upgraddiagrams" />
           <FunctionImportMapping FunctionImportName="spInsertCliente" FunctionName="SalonesEmpresarialesXYZModel.Store.spInsertCliente" />
+          <EntitySetMapping Name="Motivo">
+            <EntityTypeMapping TypeName="SalonesEmpresarialesXYZModel.Motivo">
+              <MappingFragment StoreEntitySet="Motivo">
+                <ScalarProperty Name="nombreMotivo" ColumnName="nombreMotivo" />
+                <ScalarProperty Name="idMotivo" ColumnName="idMotivo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClienteSalon">
+            <EntityTypeMapping TypeName="SalonesEmpresarialesXYZModel.ClienteSalon">
+              <MappingFragment StoreEntitySet="ClienteSalon">
+                <ScalarProperty Name="idMotivo" ColumnName="idMotivo" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
+                <ScalarProperty Name="CantidadPersonas" ColumnName="CantidadPersonas" />
+                <ScalarProperty Name="FechaEvento" ColumnName="FechaEvento" />
+                <ScalarProperty Name="idCliente" ColumnName="idCliente" />
+                <ScalarProperty Name="idSalon" ColumnName="idSalon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_InformeSolicitudes">
+            <EntityTypeMapping TypeName="SalonesEmpresarialesXYZModel.vw_InformeSolicitudes">
+              <MappingFragment StoreEntitySet="vw_InformeSolicitudes">
+                <ScalarProperty Name="nombreMotivo" ColumnName="nombreMotivo" />
+                <ScalarProperty Name="CantidadPersonas" ColumnName="CantidadPersonas" />
+                <ScalarProperty Name="FechaEvento" ColumnName="FechaEvento" />
+                <ScalarProperty Name="nombreCiudad" ColumnName="nombreCiudad" />
+                <ScalarProperty Name="telefonoCliente" ColumnName="telefonoCliente" />
+                <ScalarProperty Name="identificacionCliente" ColumnName="identificacionCliente" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

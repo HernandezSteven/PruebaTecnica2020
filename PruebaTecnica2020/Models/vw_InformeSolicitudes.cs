@@ -12,18 +12,14 @@ namespace PruebaTecnica2020.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ClienteSalon
+    public partial class vw_InformeSolicitudes
     {
-        public int idSalon { get; set; }
-        public int idCliente { get; set; }
-        public System.DateTime FechaEvento { get; set; }
-        public int CantidadPersonas { get; set; }
-        public string Observaciones { get; set; }
-        public bool Estado { get; set; }
-        public Nullable<int> idMotivo { get; set; }
-    
-        public virtual Cliente Cliente { get; set; }
-        public virtual Motivo Motivo { get; set; }
-        public virtual Salon Salon { get; set; }
+        public string Nombre { get; set; }
+        public string identificacionCliente { get; set; }
+        public string telefonoCliente { get; set; }
+        public string nombreCiudad { get; set; }
+        public Nullable<System.DateTime> FechaEvento { get; set; }
+        public Nullable<int> CantidadPersonas { get; set; }
+        public string nombreMotivo { get; set; }
     }
 }

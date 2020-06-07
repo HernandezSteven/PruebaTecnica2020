@@ -1,0 +1,26 @@
+﻿@model PruebaTecnica2020.Models.Salon
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Salon</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.nombreSalon)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nombreSalon)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idSalon }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

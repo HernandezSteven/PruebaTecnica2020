@@ -163,6 +163,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\ClienteController.cs" />
+    <Compile Include="Controllers\SalonController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -193,6 +194,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ModeloDB.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Motivo.cs">
+      <DependentUpon>ModeloDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Salon.cs">
       <DependentUpon>ModeloDB.tt</DependentUpon>
     </Compile>
@@ -203,6 +207,9 @@
       <DependentUpon>ModeloDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sysdiagrams.cs">
+      <DependentUpon>ModeloDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_InformeSolicitudes.cs">
       <DependentUpon>ModeloDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -278,6 +285,11 @@
     <Content Include="Views\Cliente\Details.cshtml" />
     <Content Include="Views\Cliente\Edit.cshtml" />
     <Content Include="Views\Cliente\Index.cshtml" />
+    <Content Include="Views\Salon\Create.cshtml" />
+    <Content Include="Views\Salon\Delete.cshtml" />
+    <Content Include="Views\Salon\Details.cshtml" />
+    <Content Include="Views\Salon\Edit.cshtml" />
+    <Content Include="Views\Salon\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

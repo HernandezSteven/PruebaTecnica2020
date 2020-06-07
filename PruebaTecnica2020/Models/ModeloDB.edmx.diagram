@@ -10,11 +10,14 @@
         <EntityTypeShape EntityType="SalonesEmpresarialesXYZModel.Departamento" Width="1.5" PointX="0.75" PointY="1.875" IsExpanded="true" />
         <EntityTypeShape EntityType="SalonesEmpresarialesXYZModel.Salon" Width="1.5" PointX="5.25" PointY="5.875" IsExpanded="true" />
         <EntityTypeShape EntityType="SalonesEmpresarialesXYZModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SalonesEmpresarialesXYZModel.ClienteSalon" Width="1.5" PointX="7.5" PointY="1.25" IsExpanded="true" />
         <AssociationConnector Association="SalonesEmpresarialesXYZModel.FK__Ciudad__nombreCi__5070F446" ManuallyRouted="false" />
         <AssociationConnector Association="SalonesEmpresarialesXYZModel.FK__Cliente__idCiuda__534D60F1" ManuallyRouted="false" />
-        <AssociationConnector Association="SalonesEmpresarialesXYZModel.FK__ClienteSa__idCli__571DF1D5" ManuallyRouted="false" />
-        <AssociationConnector Association="SalonesEmpresarialesXYZModel.FK__ClienteSa__idSal__5812160E" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="SalonesEmpresarialesXYZModel.Motivo" Width="1.5" PointX="0.75" PointY="7.875" />
+        <EntityTypeShape EntityType="SalonesEmpresarialesXYZModel.ClienteSalon" Width="1.5" PointX="7.5" PointY="3.75" />
+        <AssociationConnector Association="SalonesEmpresarialesXYZModel.FK__ClienteSa__idCli__571DF1D5" />
+        <AssociationConnector Association="SalonesEmpresarialesXYZModel.FK__ClienteSa__idMot__5EBF139D" />
+        <AssociationConnector Association="SalonesEmpresarialesXYZModel.FK__ClienteSa__idSal__5812160E" />
+        <EntityTypeShape EntityType="SalonesEmpresarialesXYZModel.vw_InformeSolicitudes" Width="2.375" PointX="7.625" PointY="8" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

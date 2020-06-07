@@ -32,7 +32,9 @@ namespace PruebaTecnica2020.Models
         public virtual DbSet<Departamento> Departamento { get; set; }
         public virtual DbSet<Salon> Salon { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<Motivo> Motivo { get; set; }
         public virtual DbSet<ClienteSalon> ClienteSalon { get; set; }
+        public virtual DbSet<vw_InformeSolicitudes> vw_InformeSolicitudes { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
